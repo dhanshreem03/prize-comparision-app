@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login & Register</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#6c63ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:450px;
+}
+
+.card{
+    background:#fff;
+    border-radius:12px;
+    padding:30px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.logo{
+    width:70px;
+    height:70px;
+    
+    border-radius:12px;
+    margin:0 auto 15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    color:#2563eb;
+}
+
+.top{
+    text-align:center;
+    color:#fff;
+    margin-bottom:25px;
+}
+
+.top small{
+    display:block;
+    margin-bottom:10px;
+}
+
+.top h1{
+    font-size:40px;
+    margin-bottom:8px;
+}
+
+.top p{
+    opacity:.9;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-weight:600;
+    margin-bottom:6px;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#888;
+}
+
+.input-box input{
+    width:100%;
+    padding:12px 12px 12px 40px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    outline:none;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:12px 0;
+    font-size:14px;
+}
+
+.row a{
+    color:#2563eb;
+    text-decoration:none;
+}
+
+.btn{
+    width:100%;
+    border:none;
+    background:#0ea5e9;
+    color:#fff;
+    padding:13px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.or{
+    text-align:center;
+    margin:18px 0;
+    color:#666;
+}
+
+.outline-btn{
+    width:100%;
+    padding:13px;
+    border:2px solid #0ea5e9;
+    background:#fff;
+    color:#0ea5e9;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.admin{
+    text-align:center;
+    margin-top:20px;
+    color:#666;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="top">
+        <small>← Back to Home</small>
+
+        <div class="logo">
+            <!-- <i class="fa-solid
+        fa-scale-balanced"></i> -->
+        <img src="./static/asset/logo.png" width="200px">
+         </div>
+        
+        <h1>Welcome Back!</h1>
+        <p>Login to continue completing services</p>
+    </div>
+
+    <div class="card">
+
+        <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-box">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" placeholder="Enter your email">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-box">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" placeholder="Enter your password">
+            </div>
+        </div>
+
+        <div class="row">
+            <label>
+                <input type="checkbox"> Remember me
+            </label>
+            <a href="#">Forgot password?</a>
+        </div>
+
+        <button class="btn">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Login
+        </button>
+
+        <div class="or">Don't have an account?</div>
+
+        <button class="outline-btn">
+            <i class="fa-solid fa-user-plus"></i>
+            Create Account
+        </button>
+
+        <div class="admin">
+            <i class="fa-solid fa-user-shield"></i>
+            Admin Login
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

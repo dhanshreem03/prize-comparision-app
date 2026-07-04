@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    margin:0;
+}
+
+header{
+    background:#2196F3;
+        color:white;
+    text-align:center;
+    padding:18px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.container{
+    width:90%;
+    max-width:700px;
+    margin:20px auto;
+}
+
+.product{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product h2{
+    margin-top:0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th, td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2196F3;
+    color:white;
+}
+
+.best-price{
+    color:green;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+button{
+    margin-top:20px;
+    background:#2196F3;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#1976D2;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+Price Comparison Results
+</header>
+
+<div class="container">
+
+<div class="product">
+<h2>Product: Samsung Galaxy A56</h2>
+
+<table>
+<tr>
+<th>Store</th>
+<th>Price</th>
+</tr>
+
+<tr>
+<td>Amazon</td>
+<td>₹28,999</td>
+</tr>
+
+<tr>
+<td>Flipkart</td>
+<td>₹27,499</td>
+</tr>
+
+<tr>
+<td>Croma</td>
+<td>₹28,250</td>
+</tr>
+
+<tr>
+<td>Reliance Digital</td>
+<td>₹27,999</td>
+</tr>
+</table>
+
+<p class="best-price">🏆 Lowest Price: Flipkart – ₹27,499</p>
+
+<button>View Product Details</button>
+
+</div>
+
+</div>
+
+</body>
+</html>
