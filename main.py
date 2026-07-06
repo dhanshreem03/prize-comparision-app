@@ -219,9 +219,12 @@ def dashboard():
 # ===== API Routes =====
 
 @app.route('/api/search', methods=['POST'])
-@login_required
 def search_products():
     """Search for products across all scrapers and track history."""
+    # Check authentication and return JSON error if not authenticated
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'Please log in to search products'}), 401
+
     try:
         data = request.get_json()
         product_name = data.get('product_name', '').strip()
@@ -298,9 +301,11 @@ def search_products():
 
 
 @app.route('/api/search/<int:search_id>')
-@login_required
 def get_search_details(search_id):
     """Get details of a specific search."""
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'Please log in to view search details'}), 401
+
     search = SearchHistory.query.get(search_id)
 
     if not search:
