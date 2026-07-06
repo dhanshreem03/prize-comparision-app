@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .error-container {
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .error-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .error-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            display: block;
+            margin-top: 15px;
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 500px) {
+            .error-container {
+                padding: 40px 20px;
+            }
+
+            .error-code {
+                font-size: 80px;
+            }
+
+            .error-title {
+                font-size: 24px;
+            }
+
+            .emoji {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <span class="emoji">🔍</span>
+        <div class="error-code">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-description">
+            Sorry! The page you're looking for doesn't exist or has been moved.
+            <br>It might have been deleted or the URL might be incorrect.
+        </p>
+        <a href="{{ url_for('index') }}" class="btn">🏠 Go to Home</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">← Go Back</a>
+    </div>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Prize Comparison App</title>
+    <title>Register & Login - Prize Comparison App</title>
     <style>
         * {
             margin: 0;
@@ -27,7 +27,7 @@
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 450px;
+            max-width: 500px;
             width: 100%;
         }
 
@@ -64,7 +64,9 @@
             font-size: 14px;
         }
 
-        input {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #ddd;
@@ -73,9 +75,35 @@
             transition: border-color 0.3s;
         }
 
-        input:focus {
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        input[type="text"]:invalid:not(:placeholder-shown),
+        input[type="email"]:invalid:not(:placeholder-shown),
+        input[type="password"]:invalid:not(:placeholder-shown) {
+            border-color: #ff6b6b;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: 400;
         }
 
         .btn {
@@ -122,6 +150,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
             font-size: 14px;
+            animation: slideIn 0.3s ease;
         }
 
         .alert.error {
@@ -136,24 +165,189 @@
             border: 1px solid #ccffcc;
         }
 
+        .alert.info {
+            background: #e6f3ff;
+            color: #33f;
+            border: 1px solid #ccddff;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .small-text {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .demo-credentials {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid #667eea;
+        }
+
+        .demo-credentials strong {
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .demo-credentials code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
         @media (max-width: 500px) {
             .container {
-                padding: 30px 20px;
+                padding: 25px 20px;
             }
 
             .header h1 {
                 font-size: 24px;
             }
+
+            .form-section {
+                margin-bottom: 30px;
+            }
+
+            .divider {
+                margin: 30px 0;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
+    <script>
+        // Form validation
+        function validateForm(formId) {
+            const form = document.getElementById(formId);
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#ff6b6b';
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+
+            return isValid;
+        }
+
+        // Password match validation for register form
+        function validatePasswords() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm_password');
+
+            if (password && confirmPassword) {
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.style.borderColor = '#ff6b6b';
+                    return false;
+                } else if (password.value) {
+                    confirmPassword.style.borderColor = '#ddd';
+                }
+            }
+            return true;
+        }
+
+        // Form submission handlers
+        document.addEventListener('DOMContentLoaded', function () {
+            const registerForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+
+            if (registerForm) {
+                registerForm.addEventListener('submit', function (e) {
+                    if (!validateForm('registerForm') || !validatePasswords()) {
+                        e.preventDefault();
+                        const container = registerForm.closest('.form-section');
+                        const alert = document.createElement('div');
+                        alert.className = 'alert error';
+                        alert.textContent = 'Please fill all fields correctly';
+                        container.insertBefore(alert, registerForm);
+                    }
+                });
+
+                // Real-time password match validation
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirm_password');
+
+                if (confirmPassword) {
+                    confirmPassword.addEventListener('input', validatePasswords);
+                }
+            }
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (e) {
+                    if (!validateForm('loginForm')) {
+                        e.preventDefault();
+                        const container = loginForm.closest('.form-section');
+                        const alert = document.createElement('div');
+                        alert.className = 'alert error';
+                        alert.textContent = 'Please enter your username and password';
+                        container.insertBefore(alert, loginForm);
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">💰</div>
-            <h1>Register</h1>
-            <p>Create a new account</p>
+            <h1>Prize Comparison</h1>
+            <p>Compare prices across e-commerce platforms</p>
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -164,35 +358,76 @@
         {% endif %}
         {% endwith %}
 
-        <form method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required autofocus minlength="3">
-                <small style="color: #666;">At least 3 characters</small>
-            </div>
+        <!-- Registration Section -->
+        <div class="form-section">
+            <div class="section-title">📝 Create New Account</div>
+            <form id="registerForm" method="POST" action="{{ url_for('register') }}">
+                <div class="form-group">
+                    <label for="reg_username">Username</label>
+                    <input type="text" id="reg_username" name="username" required minlength="3"
+                        placeholder="Enter a username">
+                    <small class="small-text">✓ At least 3 characters</small>
+                </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
+                <div class="form-group">
+                    <label for="reg_email">Email Address</label>
+                    <input type="email" id="reg_email" name="email" required placeholder="your.email@example.com">
+                    <small class="small-text">✓ Must be a valid email</small>
+                </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required minlength="6">
-                <small style="color: #666;">At least 6 characters</small>
-            </div>
+                <div class="form-group">
+                    <label for="reg_password">Password</label>
+                    <input type="password" id="reg_password" name="password" required minlength="6"
+                        placeholder="Enter a password">
+                    <small class="small-text">✓ At least 6 characters</small>
+                </div>
 
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
-            </div>
+                <div class="form-group">
+                    <label for="reg_confirm_password">Confirm Password</label>
+                    <input type="password" id="reg_confirm_password" name="confirm_password" required minlength="6"
+                        placeholder="Re-enter your password">
+                    <small class="small-text">✓ Must match the password above</small>
+                </div>
 
-            <button type="submit" class="btn">Register</button>
+                <button type="submit" class="btn">🚀 Create Account</button>
+            </form>
+        </div>
 
-            <div class="links">
-                Already have an account? <a href="{{ url_for('login') }}">Login here</a>
-            </div>
-        </form>
+        <!-- Divider -->
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <!-- Login Section -->
+        <div class="form-section">
+            <div class="section-title">🔐 Login to Account</div>
+            <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="login_username">Username</label>
+                    <input type="text" id="login_username" name="username" required autofocus
+                        placeholder="Enter your username">
+                </div>
+
+                <div class="form-group">
+                    <label for="login_password">Password</label>
+                    <input type="password" id="login_password" name="password" required
+                        placeholder="Enter your password">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="remember" name="remember" value="on">
+                    <label for="remember">🔒 Remember me (stay logged in)</label>
+                </div>
+
+                <button type="submit" class="btn">✓ Login</button>
+
+                <div class="demo-credentials">
+                    <strong>📌 Demo Credentials:</strong>
+                    Username: <code>admin</code><br>
+                    Password: <code>admin123</code>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 

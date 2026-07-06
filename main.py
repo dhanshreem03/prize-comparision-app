@@ -51,6 +51,9 @@ with app.app_context():
 class AuthenticatedAdminView(ModelView):
     """Base admin view with authentication."""
 
+    def __init__(self, model, db, *args, **kwargs):
+        super().__init__(model, db, *args, **kwargs)
+
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin
 
@@ -102,10 +105,10 @@ class CustomAdminIndexView(AdminIndexView):
 # Setup Flask-Admin
 admin = Admin(app, name='Prize Comparison Admin',
               index_view=CustomAdminIndexView())
-admin.add_view(UserAdminView(User, db.session, name='Users'))
+admin.add_view(UserAdminView(User, db, name='Users'))
 admin.add_view(SearchHistoryAdminView(
-    SearchHistory, db.session, name='Search History'))
-admin.add_view(ProductAdminView(Product, db.session, name='Products'))
+    SearchHistory, db, name='Search History'))
+admin.add_view(ProductAdminView(Product, db, name='Products'))
 
 
 # ===== Authentication Routes =====
@@ -170,18 +173,27 @@ def login():
 
         if not username or not password:
             flash('Username and password are required', 'error')
-            return redirect(url_for('login'))
+            next_page = request.args.get('next', '')
+            return redirect(url_for('login', next=next_page))
 
         user = User.query.filter_by(username=username).first()
 
         if user and user.check_password(password) and user.is_active:
-            login_user(user, remember=remember)
+            login_user(user, remember=bool(remember))
             flash(f'Welcome back, {user.username}!', 'success')
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('index'))
 
-        flash('Invalid username or password', 'error')
-        return redirect(url_for('login'))
+        # Provide specific error messages
+        next_page = request.args.get('next', '')
+        if not user:
+            flash('Username not found. Please check and try again.', 'error')
+        elif not user.is_active:
+            flash('Your account has been deactivated. Please contact support.', 'error')
+        else:
+            flash('Invalid password. Please try again.', 'error')
+
+        return redirect(url_for('login', next=next_page))
 
     return render_template('login.html')
 
@@ -223,7 +235,7 @@ def search_products():
     """Search for products across all scrapers and track history."""
     # Check authentication and return JSON error if not authenticated
     if not current_user.is_authenticated:
-        return jsonify({'error': 'Please log in to search products'}), 401
+        return jsonify({'error': 'Please log in to search products', 'redirect': url_for('login')}), 401
 
     try:
         data = request.get_json()
@@ -304,7 +316,7 @@ def search_products():
 def get_search_details(search_id):
     """Get details of a specific search."""
     if not current_user.is_authenticated:
-        return jsonify({'error': 'Please log in to view search details'}), 401
+        return jsonify({'error': 'Please log in to view search details', 'redirect': url_for('login')}), 401
 
     search = SearchHistory.query.get(search_id)
 
@@ -399,3 +411,12 @@ def server_error(error):
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
+
+
+"""
+
+
+
+
+
+"""
