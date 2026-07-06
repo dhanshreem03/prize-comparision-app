@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prize Comparison App - Compare Prices Across Platforms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .btn-auth {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-auth:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .login-prompt {
+            background: #e6f3ff;
+            border: 1px solid #99ccff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .login-prompt p {
+            color: #33f;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-box button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-box button:active {
+            transform: translateY(0);
+        }
+
+        .results-container {
+            margin-top: 30px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            transition: box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            background: #f0f0f0;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .product-source {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .price-info {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .price {
+            font-size: 14px;
+        }
+
+        .price.original {
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .price.discounted {
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature {
+            background: white;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .search-section {
+                padding: 20px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}" class="logo">💰 Prize Comparison</a>
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                <span>{{ current_user.username }}</span>
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('admin.index') }}">Admin Panel</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="btn-auth">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn-auth">Login</a>
+                <a href="{{ url_for('register') }}" class="btn-auth">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="hero">
+            <div class="hero-icon">💰</div>
+            <h1>Prize Comparison</h1>
+            <p>Find the best deals across multiple platforms instantly</p>
+        </div>
+
+        {% if not current_user.is_authenticated %}
+        <div class="login-prompt">
+            <p>🔐 Please log in or register to compare prices</p>
+            <div class="btn-group">
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">Create Account</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput"
+                    placeholder="Search for a product... (e.g., iPhone 16, Laptop, Headphones)" autocomplete="off" />
+                <button onclick="searchProducts()">Search</button>
+            </div>
+
+            <div class="error" id="errorMessage"></div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; color: #667eea;">Searching across platforms...</p>
+            </div>
+
+            <div class="results-container" id="resultsContainer"></div>
+        </div>
+        {% endif %}
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Multi-Platform</div>
+                <div class="feature-desc">Search Amazon & Flipkart simultaneously</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💵</div>
+                <div class="feature-title">Best Prices</div>
+                <div class="feature-desc">Compare prices instantly and save money</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Fast & Reliable</div>
+                <div class="feature-desc">Real-time scraping with accurate data</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">History & Tracking</div>
+                <div class="feature-desc">Track your searches and price history</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.querySelector('button');
+
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchProducts();
+                }
+            });
+        }
+
+        async function searchProducts() {
+            const productName = searchInput.value.trim();
+
+            if (!productName) {
+                showError('Please enter a product name');
+                return;
+            }
+
+            clearError();
+            showLoading(true);
+            document.getElementById('resultsContainer').innerHTML = '';
+
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ product_name: productName })
+                });
+
+                const data = await response.json();
+                showLoading(false);
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        showError('Please log in to search');
+                        return;
+                    }
+                    showError(data.error || 'Search failed');
+                    return;
+                }
+
+                if (data.results.length === 0) {
+                    showError('No products found. Please try another search.');
+                    return;
+                }
+
+                displayResults(data.results);
+            } catch (error) {
+                showLoading(false);
+                showError('Error searching products: ' + error.message);
+                console.error('Search error:', error);
+            }
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('resultsContainer');
+
+            const grouped = {};
+            results.forEach(product => {
+                if (!grouped[product.product_name]) {
+                    grouped[product.product_name] = [];
+                }
+                grouped[product.product_name].push(product);
+            });
+
+            let html = '';
+            for (const [productName, items] of Object.entries(grouped)) {
+                items.forEach(product => {
+                    html += `
+                        <div class="product-card">
+                            ${product.image_url ? `<img src="${product.image_url}" alt="${productName}" class="product-image" onerror="this.src='https://via.placeholder.com/80'">` : '<div class="product-image" style="background: #f0f0f0;"></div>'}
+                            <div class="product-info">
+                                <div class="product-name">${productName}</div>
+                                <span class="product-source">${product.source}</span>
+                                <div class="price-info">
+                                    ${product.price ? `<div class="price original">₹${product.price}</div>` : ''}
+                                    ${product.discounted_price ? `<div class="price discounted">₹${product.discounted_price}</div>` : ''}
+                                </div>
+                                ${product.product_url ? `<a href="${product.product_url}" target="_blank" style="display: inline-block; margin-top: 8px; color: #667eea; text-decoration: none; font-size: 13px;">View on ${product.source} →</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            if (loading) loading.style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function clearError() {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.classList.remove('show');
+            errorElement.textContent = '';
+        }
+    </script>
+</body>
+
+</html>

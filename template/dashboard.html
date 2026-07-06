@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Prize Comparison App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .search-history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .search-history-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            font-size: 14px;
+        }
+
+        .search-history-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .search-history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .search-query-cell {
+            color: #667eea;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .search-query-cell:hover {
+            text-decoration: underline;
+        }
+
+        .results-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .time-cell {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #667eea;
+            font-size: 13px;
+        }
+
+        .pagination a:hover {
+            background: #f0f0f0;
+        }
+
+        .pagination .active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .btn-search {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .search-history-table {
+                font-size: 12px;
+            }
+
+            .search-history-table th,
+            .search-history-table td {
+                padding: 10px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('index') }}" class="logo">💰 Prize Comparison</a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Search Products</a>
+                <a href="{{ url_for('dashboard') }}">My Dashboard</a>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('admin.index') }}">Admin Panel</a>
+                {% endif %}
+                <div class="user-info">
+                    <span>{{ current_user.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>👋 Welcome, {{ current_user.username }}!</h1>
+            <p>Here's your search history and results</p>
+        </div>
+
+        <div class="section">
+            <h2>📋 Search History</h2>
+
+            {% if search_history.items %}
+            <table class="search-history-table">
+                <thead>
+                    <tr>
+                        <th>Search Query</th>
+                        <th>Results Found</th>
+                        <th>Searched On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for search in search_history.items %}
+                    <tr>
+                        <td><strong>{{ search.search_query }}</strong></td>
+                        <td><span class="results-badge">{{ search.results_count }} results</span></td>
+                        <td class="time-cell">{{ search.created_at.strftime('%B %d, %Y at %I:%M %p') }}</td>
+                        <td>
+                            <a href="{{ url_for('get_search_details', search_id=search.id) }}"
+                                class="search-query-cell">
+                                View Results →
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if search_history.pages > 1 %}
+            <div class="pagination">
+                {% if search_history.has_prev %}
+                <a href="{{ url_for('dashboard', page=search_history.prev_num) }}">← Previous</a>
+                {% endif %}
+
+                {% for page_num in search_history.iter_pages() %}
+                {% if page_num %}
+                {% if page_num == search_history.page %}
+                <span class="active">{{ page_num }}</span>
+                {% else %}
+                <a href="{{ url_for('dashboard', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+                {% else %}
+                <span>...</span>
+                {% endif %}
+                {% endfor %}
+
+                {% if search_history.has_next %}
+                <a href="{{ url_for('dashboard', page=search_history.next_num) }}">Next →</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No searches yet</h3>
+                <p>You haven't made any searches yet. Start comparing prices now!</p>
+                <a href="{{ url_for('index') }}" class="btn-search">Search Products</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
